@@ -227,11 +227,16 @@ cdef class Log(Classification):
 cdef class MAPE(Regression):
     """Mean Absolute Percentage Loss."""
     cdef double loss(self, double p, double y) nogil:
-        return fabs(p-y)/(y)
+        if y == 0:
+            return 0
+        else:
+            return fabs(p-y)/(y)
 
 
     cdef double _dloss(self, double p, double y) nogil:
-        if p-y > 0:
+        if y == 0:
+            return 0
+        elif p-y > 0:
             return 1/y
         else:
             return -1/y
